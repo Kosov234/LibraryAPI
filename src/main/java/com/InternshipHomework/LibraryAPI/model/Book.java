@@ -1,92 +1,114 @@
 package com.InternshipHomework.LibraryAPI.model;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Book {
-    private final String isbn;
-    private final String title;
-    private final String subtitle;
-    private final String publisher;
-    private final long publishedDate;
-    private final String description;
-    private final int pageCount;
-    private final String thumbnailUrl;
-    private final String language;
-    private final String previewLink;
-    private final double averageRating;
-    private final String[] authors;
-    private final String[] categories;
+    @JsonProperty
+    private String isbn;
+    @JsonProperty
+    private String title;
+    @JsonProperty
+    private String subtitle;
+    @JsonProperty
+    private String publisher;
 
-    public Book(String isbn, String title, String subtitle, String publisher,
-                long publishedDate, String description, int pageCount,
-                String thumbnailUrl, String language, String previewLink,
-                double averageRating, String[] authors, String[] categories) {
-        this.isbn = isbn;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.publisher = publisher;
-        this.publishedDate = publishedDate;
-        this.description = description;
-        this.pageCount = pageCount;
-        this.thumbnailUrl = thumbnailUrl;
-        this.language = language;
-        this.previewLink = previewLink;
-        this.averageRating = averageRating;
-        this.authors = authors;
-        this.categories = categories;
+    @JsonProperty
+    private long publishedDate;
+    @JsonProperty
+    private String description;
+    @JsonProperty
+    private Integer pageCount;
+    @JsonProperty
+    private String thumbnailUrl;
+    @JsonProperty
+    private String language;
+    @JsonProperty
+    private String previewLink;
+    @JsonProperty
+    private Double averageRating;
+    @JsonProperty
+    private String[] authors;
+    @JsonProperty
+    private String[] categories;
+
+
+
+    @JsonProperty("volumeInfo")
+    public void getNearestFields(Map<String,Object> volumeInfo) throws ParseException {
+
+
+
+
+        Map<String,Object> imageLinks = (Map<String, Object>) volumeInfo.get("imageLinks");
+        this.thumbnailUrl = (String)imageLinks.get("thumbnail");
+
+
+//        if(volumeInfo.containsKey("industryIdentifiers")){
+//            ArrayList<String> industryIdentifiers = (ArrayList<String>) volumeInfo.get("industryIdentifiers");
+//            industryIdentifiers.get(0);
+//        }
+
+
+        this.title = (String)volumeInfo.get("title");
+        this.subtitle = (String)volumeInfo.get("subtitle");
+        this.publisher = (String)volumeInfo.get("publisher");
+
+        if(volumeInfo.containsKey("publishedDate")) {
+            DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                    .appendValue(ChronoField.YEAR,4)
+                    .optionalStart()
+                    .appendPattern("-MM[-dd]")
+                    .optionalEnd()
+                    .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                    .parseDefaulting(ChronoField.DAY_OF_MONTH,1)
+                    .toFormatter();
+
+            String buffer = formatter.parse((String)volumeInfo.get("publishedDate"), LocalDate::from).toString();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormat.parse(buffer);
+
+            this.publishedDate =(long) date.getTime()/1000 ;
+        }
+        this.description = (String)volumeInfo.get("description");
+        this.pageCount = (Integer) volumeInfo.get("pageCount");
+        this.language = (String)volumeInfo.get("language");
+        this.previewLink = (String)volumeInfo.get("previewLink");
+        this.averageRating =(Double)volumeInfo.get("averageRating");
+
+        if(volumeInfo.containsKey("authors")) {
+            ArrayList<String> buffer = (ArrayList<String>) volumeInfo.get("authors");
+            this.authors = new String[buffer.size()];
+            for (int i = 0; i < buffer.size(); i++) {
+                this.authors[i] = buffer.get(i);
+            }
+        }
+
+        if(volumeInfo.containsKey("categories")) {
+            ArrayList<String> buffer = (ArrayList<String>) volumeInfo.get("categories");
+            this.categories = new String[buffer.size()];
+            for (int i = 0; i < buffer.size(); i++) {
+                this.categories[i] = buffer.get(i);
+            }
+        }
     }
 
-    public String getIsbn() {
-        return isbn;
-    }
 
-    public String getTitle() {
-        return title;
-    }
 
-    public String getSubtitle() {
-        return subtitle;
-    }
 
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public long getPublishedDate() {
-        return publishedDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getPageCount() {
-        return pageCount;
-    }
-
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public String getPreviewLink() {
-        return previewLink;
-    }
-
-    public double getAverageRating() {
-        return averageRating;
-    }
-
-    public String[] getAuthors() {
-        return authors;
-    }
-
-    public String[] getCategories() {
-        return categories;
-    }
 
 
 }
