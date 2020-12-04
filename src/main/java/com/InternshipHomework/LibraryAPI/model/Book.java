@@ -1,23 +1,19 @@
 package com.InternshipHomework.LibraryAPI.model;
 
+import com.InternshipHomework.LibraryAPI.util.DateUtil;
 import com.fasterxml.jackson.annotation.*;
 
-import java.text.DateFormat;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
+
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Book {
     @JsonProperty
+    @JsonAlias({"id"})
     private String isbn;
     @JsonProperty
     private String title;
@@ -27,6 +23,7 @@ public class Book {
     private String publisher;
 
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private long publishedDate;
     @JsonProperty
     private String description;
@@ -45,44 +42,39 @@ public class Book {
     @JsonProperty
     private String[] categories;
 
+    public String[] getCategories() {
+        return categories;
+    }
 
+    public String getIsbn() {
+        return isbn;
+    }
 
     @JsonProperty("volumeInfo")
     public void getNearestFields(Map<String,Object> volumeInfo) throws ParseException {
-
-
-
-
         Map<String,Object> imageLinks = (Map<String, Object>) volumeInfo.get("imageLinks");
         this.thumbnailUrl = (String)imageLinks.get("thumbnail");
 
+        if(volumeInfo.containsKey("industryIdentifiers")){
+            ArrayList<Map<String, String>> industryIdentifiers = (ArrayList<Map<String, String>>) volumeInfo.get("industryIdentifiers");
 
-//        if(volumeInfo.containsKey("industryIdentifiers")){
-//            ArrayList<String> industryIdentifiers = (ArrayList<String>) volumeInfo.get("industryIdentifiers");
-//            industryIdentifiers.get(0);
-//        }
-
+            for(Map<String,String> map : industryIdentifiers)
+            {
+                if(map.containsValue("ISBN_13"))
+                    this.isbn = map.get("identifier");
+            }
+        }
 
         this.title = (String)volumeInfo.get("title");
         this.subtitle = (String)volumeInfo.get("subtitle");
         this.publisher = (String)volumeInfo.get("publisher");
 
         if(volumeInfo.containsKey("publishedDate")) {
-            DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                    .appendValue(ChronoField.YEAR,4)
-                    .optionalStart()
-                    .appendPattern("-MM[-dd]")
-                    .optionalEnd()
-                    .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                    .parseDefaulting(ChronoField.DAY_OF_MONTH,1)
-                    .toFormatter();
 
-            String buffer = formatter.parse((String)volumeInfo.get("publishedDate"), LocalDate::from).toString();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = dateFormat.parse(buffer);
-
-            this.publishedDate =(long) date.getTime()/1000 ;
+                DateUtil dateUtil = new DateUtil();
+                this.publishedDate = dateUtil.transformDateStringToUnixLong(volumeInfo);
         }
+
         this.description = (String)volumeInfo.get("description");
         this.pageCount = (Integer) volumeInfo.get("pageCount");
         this.language = (String)volumeInfo.get("language");

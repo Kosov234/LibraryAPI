@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -23,5 +24,13 @@ public class BookService {
 
     public BookJSON getAllBooks() throws IOException {
         return bookDao.getAllBooks();
+    }
+
+    public Optional<Book> getBookByIsbn(String isbn) throws IOException {
+        return bookDao.getBookByIsbn(isbn);
+    }
+
+    public ArrayList<Book> getBooksByCategory(String category) throws IOException {
+        return  bookDao.getBooksByCategory(category);
     }
 }
