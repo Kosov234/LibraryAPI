@@ -1,4 +1,4 @@
-package com.InternshipHomework.LibraryAPI.util;
+package com.internshipHomework.libraryApi.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.Map;
 
 public class DateUtil {
+
+    private DateUtil(){
+        throw new IllegalStateException("Utility class");
+    }
 
     public static long transformDateStringToUnixLong(Map<String,Object> volumeInfo) throws ParseException {
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
@@ -26,7 +30,7 @@ public class DateUtil {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormat.parse(buffer);
 
-        return (long) date.getTime()/1000 ;
+        return date.getTime()/1000 ;
 
     }
 }

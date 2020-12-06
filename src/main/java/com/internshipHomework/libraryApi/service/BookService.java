@@ -1,14 +1,14 @@
-package com.InternshipHomework.LibraryAPI.service;
+package com.internshipHomework.libraryApi.service;
 
-import com.InternshipHomework.LibraryAPI.dao.BookDao;
-import com.InternshipHomework.LibraryAPI.model.Book;
-import com.InternshipHomework.LibraryAPI.model.BookJSON;
+import com.internshipHomework.libraryApi.dao.BookDao;
+import com.internshipHomework.libraryApi.model.Author;
+import com.internshipHomework.libraryApi.model.Book;
+import com.internshipHomework.libraryApi.model.BookJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +30,11 @@ public class BookService {
         return bookDao.getBookByIsbn(isbn);
     }
 
-    public ArrayList<Book> getBooksByCategory(String category) throws IOException {
+    public List<Book> getBooksByCategory(String category) throws IOException {
         return  bookDao.getBooksByCategory(category);
+    }
+
+    public List<Author> getRating(){
+        return bookDao.getRating();
     }
 }

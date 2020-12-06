@@ -1,6 +1,6 @@
-package com.InternshipHomework.LibraryAPI.model;
+package com.internshipHomework.libraryApi.model;
 
-import com.InternshipHomework.LibraryAPI.util.DateUtil;
+import com.internshipHomework.libraryApi.util.DateUtil;
 import com.fasterxml.jackson.annotation.*;
 
 
@@ -21,7 +21,6 @@ public class Book {
     private String subtitle;
     @JsonProperty
     private String publisher;
-
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private long publishedDate;
@@ -41,6 +40,35 @@ public class Book {
     private String[] authors;
     @JsonProperty
     private String[] categories;
+
+    public Book(){}
+
+    public Book(String isbn, String title, String subtitle, String publisher,
+                long publishedDate, String description, Integer pageCount,
+                String thumbnailUrl, String language, String previewLink, Double averageRating,
+                String[] authors, String[] categories) {
+        this.isbn = isbn;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.pageCount = pageCount;
+        this.thumbnailUrl = thumbnailUrl;
+        this.language = language;
+        this.previewLink = previewLink;
+        this.averageRating = averageRating;
+        this.authors = authors;
+        this.categories = categories;
+    }
+
+    public String[] getAuthors() {
+        return authors;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
 
     public String[] getCategories() {
         return categories;
@@ -70,9 +98,7 @@ public class Book {
         this.publisher = (String)volumeInfo.get("publisher");
 
         if(volumeInfo.containsKey("publishedDate")) {
-
-                DateUtil dateUtil = new DateUtil();
-                this.publishedDate = dateUtil.transformDateStringToUnixLong(volumeInfo);
+                this.publishedDate = DateUtil.transformDateStringToUnixLong(volumeInfo);
         }
 
         this.description = (String)volumeInfo.get("description");
