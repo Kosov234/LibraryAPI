@@ -9,7 +9,7 @@ As I've already wrote ,I wanted to stick with the options which are already avai
 The syntax is quite understandable and I've been able to find a couple of very nice tutorials(this one has bought me (: )
 ## Design patter - DAO
 I've decided to stick with the DAO design pattern in order to divide my project on layers, which will lead to modularity.
-Thanks to it my code ,as well as my workflow, was divided into parts and I was undertanding what exactly I am working on.
+Thanks to it ,my code ,as well as my workflow, was divided into parts and I was undertanding what exactly I am working on.
 ## Instructions on how to run
 ### Building
 In order to build the application run the following command
