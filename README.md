@@ -12,13 +12,13 @@ I've decided to stick with the DAO design pattern in order to divide my project 
 Thanks to it my code ,as well as my workflow, was divided into parts and I was undertanding what exactly I am working on.
 ## Instructions on how to run
 ### Building
-In order to build the application
+In order to build the application run the following command
 ```
 mvn package
 ```
 And press Ctrl+Enter
 ### Running
-After building the application run the followinf command
+After building the application run the following command
 
 ```
 java -jar .\target\LibraryAPI-0.0.1-SNAPSHOT.jar [fileName.json]
