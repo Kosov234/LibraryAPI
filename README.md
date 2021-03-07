@@ -1,4 +1,5 @@
 ## Short Description
+Test Task for one of the internships
 Web API with endpoints to retreive book by category,by ISBN and retreiving list of all authors with their average rating.
 ## Application framework - Spring Boot
 Spring Boot is a framework which is designed to simplify the bootstraping and development of Spring application.
